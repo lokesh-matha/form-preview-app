@@ -52,4 +52,4 @@ vercel
 Follow the prompts to complete the deployment.
 
 Deployed Application
-You can view the live application here: https://form-preview-app.vercel.app/
+You can view the live application here: [https://form-preview-app.vercel.app/]
