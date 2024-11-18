@@ -118,42 +118,60 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema }) => {
                 />
               ) : null}
 
-              {field.type === 'select' && field.options ? (
-                <select
-                  id={field.id}
-                  required={field.required}
-                  className={`input-field ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border border-gray-300 rounded p-2 w-full`}
-                >
-                  {field.options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              ) : null}
+{field.type === 'select' && field.options ? (
+  <select
+  id={field.id}
+  name={field.id} // Use field.id here
+  required={field.required}
+  className={`input-field ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border border-gray-300 rounded p-2 w-full`}
+>
+
+    {/* Map through the options array */}
+    {field.options.map((option) => {
+      if (typeof option === 'string') {
+        // Handle string array like ["India", "USA"]
+        return (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        );
+      } else if (typeof option === 'object' && option.value && option.label) {
+        // Handle object array like [{ value: "india", label: "India" }]
+        return (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        );
+      }
+      return null; // For invalid formats, skip rendering
+    })}
+  </select>
+) : null}
+
 
               {/* Radio Button */}
               {field.type === 'radio' && field.options ? (
-                <div className="radio-group">
-                  {field.options.map((option, index) => (
-                    <label
-                      key={`${field.id}-${index}`} // Unique key for React rendering
-                      htmlFor={`${field.id}-${index}`} // Associate label with the input
-                      className={`radio-label ${isDarkMode ? 'text-white' : 'text-black'} flex items-center gap-2`}
-                    >
-                      <input
-                        type="radio"
-                        id={`${field.id}-${index}`} // Unique id for the input
-                        name={field.id} // Group radio buttons by the same name
-                        value={option.value} // Option value
-                        required={field.required} // Make selection required if applicable
-                        className="radio-input"
-                      />
-                      {option.label} {/* Display the label text */}
-                    </label>
-                  ))}
-                </div>
-              ) : null}
+  <div className="radio-group">
+    
+    {field.options.map((option, index) => (
+      <label
+        key={`${field.id}-${index}`}
+        htmlFor={`${field.id}-${index}`}
+        className={`radio-label ${isDarkMode ? 'text-white' : 'text-black'} flex items-center gap-2`}
+      >
+        <input
+          type="radio"
+          id={`${field.id}-${index}`}
+          name={field.id}
+          value={typeof option === 'string' ? option : option.value}
+          required={field.required}
+          className="radio-input"
+        />
+        {typeof option === 'string' ? option : option.label}
+      </label>
+    ))}
+  </div>
+) : null}
 
               {/* File Input with Image Preview */}
               {field.type === 'file' && (
@@ -162,7 +180,7 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema }) => {
                     htmlFor={field.id}
                     className={`file-label ${isDarkMode ? 'text-white' : 'text-black'}`}
                   >
-                    {field.label}
+                    
                   </label>
                   <input
                     type="file"
@@ -217,23 +235,26 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema }) => {
 
               {/* Render checkbox */}
               {field.type === 'checkbox' && field.options ? (
-                <div className="checkbox-group mb-4">
-                  {field.options.map((option) => (
-                    <div key={option.value} className="flex items-center mb-2">
-                      <input
-                        type="checkbox"
-                        id={option.value}
-                        name={field.id}
-                        value={option.value}
-                        className={`checkbox-input ${isDarkMode ? 'bg-gray-700' : 'bg-white'} border border-gray-300 p-2`}
-                      />
-                      <label htmlFor={option.value} className={`ml-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>
-                        {option.label}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
+  <div className="checkbox-group">
+    
+    {field.options.map((option, index) => (
+      <label
+        key={`${field.id}-${index}`}
+        htmlFor={`${field.id}-${index}`}
+        className={`checkbox-label ${isDarkMode ? 'text-white' : 'text-black'} flex items-center gap-2`}
+      >
+        <input
+          type="checkbox"
+          id={`${field.id}-${index}`}
+          name={`${field.id}-${option}`}
+          value={typeof option === 'string' ? option : option.value}
+          className="checkbox-input"
+        />
+        {typeof option === 'string' ? option : option.label}
+      </label>
+    ))}
+  </div>
+) : null}
             </div>
           ))
         ) : (
