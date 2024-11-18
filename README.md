@@ -1,46 +1,134 @@
-# Getting Started with Create React App
+JSON Form Editor and Preview
+A React application that allows users to edit JSON schema and preview the corresponding dynamic form. This tool is ideal for building and testing custom forms dynamically from JSON input.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Features
+JSON Editor: Edit and validate JSON schema.
+Form Preview: Real-time form rendering based on the JSON schema.
+Dark Mode: Toggle between light and dark themes.
+Clipboard Functionality: Copy the JSON schema to the clipboard.
+Dynamic Field Support: Supports text, email, textarea, radio, checkbox, and select fields.
+Example JSON Schemas
+Here’s a sample schema to get started:
 
-## Available Scripts
+json
+Copy code
+{
+  "formTitle": "Customer Feedback Form",
+  "formDescription": "We'd love to hear your thoughts on our product and service!",
+  "fields": [
+    {
+      "id": "fullName",
+      "type": "text",
+      "label": "Full Name",
+      "required": true,
+      "placeholder": "Enter your full name"
+    },
+    {
+      "id": "email",
+      "type": "email",
+      "label": "Email Address",
+      "required": true,
+      "placeholder": "you@example.com",
+      "validation": {
+        "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+        "message": "Please enter a valid email address"
+      }
+    },
+    {
+      "id": "rating",
+      "type": "radio",
+      "label": "How would you rate our product?",
+      "required": true,
+      "options": [
+        { "value": "1", "label": "1 - Poor" },
+        { "value": "2", "label": "2 - Fair" },
+        { "value": "3", "label": "3 - Good" },
+        { "value": "4", "label": "4 - Very Good" },
+        { "value": "5", "label": "5 - Excellent" }
+      ]
+    },
+    {
+      "id": "features",
+      "type": "checkbox",
+      "label": "Which features do you find most useful?",
+      "required": false,
+      "options": [
+        { "value": "easeOfUse", "label": "Ease of Use" },
+        { "value": "design", "label": "Design" },
+        { "value": "performance", "label": "Performance" },
+        { "value": "support", "label": "Customer Support" }
+      ]
+    },
+    {
+      "id": "satisfaction",
+      "type": "select",
+      "label": "Overall Satisfaction",
+      "required": true,
+      "options": [
+        { "value": "verySatisfied", "label": "Very Satisfied" },
+        { "value": "satisfied", "label": "Satisfied" },
+        { "value": "neutral", "label": "Neutral" },
+        { "value": "dissatisfied", "label": "Dissatisfied" },
+        { "value": "veryDissatisfied", "label": "Very Dissatisfied" }
+      ]
+    },
+    {
+      "id": "suggestions",
+      "type": "textarea",
+      "label": "Any suggestions for improvement?",
+      "required": false,
+      "placeholder": "Let us know how we can improve"
+    }
+  ]
+}
+Setup Instructions
+Follow these steps to set up the application locally:
 
-In the project directory, you can run:
+Clone the Repository:
 
-### `npm start`
+bash
+Copy code
+git clone <repository-url>
+cd <repository-name>
+Install Dependencies:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+bash
+Copy code
+npm install
+Start the Development Server:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+bash
+Copy code
+npm start
+Open your browser and navigate to http://localhost:3000.
 
-### `npm test`
+Build for Production:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+bash
+Copy code
+npm run build
+This command creates an optimized production build in the build/ directory.
 
-### `npm run build`
+Local Development Guide
+File Structure:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+src/components/JSONEditor.tsx: The JSON editor component.
+src/components/FormPreview.tsx: The form preview component.
+src/styles/: CSS styles for the application.
+Adding a New Field Type: Modify the FormPreview component to handle new field types. Ensure the JSON schema includes the correct type and associated attributes.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Testing: Use the JSON schema provided above to test functionality.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Deployment Instructions
+You can deploy the application on platforms like Vercel or Netlify.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Deploy on Vercel
+Install the Vercel CLI:
+bash
+Copy code
+npm install -g vercel
+Deploy the project:
+bash
+Copy code
+vercel
+Follow the prompts to complete the deployment.

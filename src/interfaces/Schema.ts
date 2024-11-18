@@ -18,4 +18,14 @@ export interface Field {
     formDescription: string;
     fields: Field[];
   }
+  // src/types.ts
+export interface Field {
+  id: string;
+  type: string;
+  label: string;
+  required: boolean;
+  options?: { value: string; label: string }[];
+  accept?: string; // Add this line to support accept for file input
+}
+
   

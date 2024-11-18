@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { copyToClipboard } from '../utils/clipboard'; // Assuming you have this utility for clipboard functionality
+import { copyToClipboard } from '../utils/clipboard';
 
 // Define FormPreviewProps
 interface Field {
-  id: string;
+  id: string; // Add id for input elements
   type: string;
   label: string;
   required: boolean;
@@ -13,6 +13,7 @@ interface Field {
     message: string;
   };
   options?: { value: string; label: string }[];
+  accept?: string; // Accept property for file input types
 }
 
 interface FormSchema {
@@ -42,6 +43,16 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema }) => {
       localStorage.setItem('darkMode', newMode.toString());
       return newMode;
     });
+  };
+
+  const [file, setFile] = useState<string | null>(null); // For storing image preview URL
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      const fileURL = URL.createObjectURL(selectedFile); // Create a URL for the selected image
+      setFile(fileURL); // Set the image preview URL
+    }
   };
 
   // Handle Copy to Clipboard
@@ -121,56 +132,108 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema }) => {
                 </select>
               ) : null}
 
+              {/* Radio Button */}
               {field.type === 'radio' && field.options ? (
                 <div className="radio-group">
-                  {field.options.map((option) => (
+                  {field.options.map((option, index) => (
                     <label
-                      key={option.value}
-                      className={`radio-label ${isDarkMode ? 'text-white' : 'text-black'}`}
+                      key={`${field.id}-${index}`} // Unique key for React rendering
+                      htmlFor={`${field.id}-${index}`} // Associate label with the input
+                      className={`radio-label ${isDarkMode ? 'text-white' : 'text-black'} flex items-center gap-2`}
                     >
-                      <input type="radio" id={field.id} name={field.id} value={option.value} />
-                      {option.label}
+                      <input
+                        type="radio"
+                        id={`${field.id}-${index}`} // Unique id for the input
+                        name={field.id} // Group radio buttons by the same name
+                        value={option.value} // Option value
+                        required={field.required} // Make selection required if applicable
+                        className="radio-input"
+                      />
+                      {option.label} {/* Display the label text */}
                     </label>
                   ))}
                 </div>
               ) : null}
 
-              {/* Only render textarea when type is 'textarea' */}
-              {field.type === 'textarea' ? (
+              {/* File Input with Image Preview */}
+              {field.type === 'file' && (
+                <div className="file-upload">
+                  <label
+                    htmlFor={field.id}
+                    className={`file-label ${isDarkMode ? 'text-white' : 'text-black'}`}
+                  >
+                    {field.label}
+                  </label>
+                  <input
+                    type="file"
+                    id={field.id}
+                    name={field.id}
+                    accept={field.accept || 'image/*'}
+                    className="file-input"
+                    required={field.required}
+                    onChange={handleFileChange}
+                  />
+                  {file && (
+                    <div className="image-preview">
+                      <img src={file} alt="Profile preview" className="profile-preview" />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Textarea */}
+              {field.type === 'textarea' && (
                 <textarea
                   id={field.id}
                   placeholder={field.placeholder}
                   required={field.required}
                   className={`input-field ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border border-gray-300 rounded p-2 w-full`}
                 />
-              ) : null}
+              )}
+
+              {/* Password Input */}
+              {field.type === 'password' && (
+                <input
+                  type="password"
+                  id={field.id}
+                  placeholder={field.placeholder}
+                  required={field.required}
+                  className={`input-field ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border border-gray-300 rounded p-2 w-full`}
+                />
+              )}
+
+              {/* Telephone Input with Validation */}
+              {field.type === 'tel' && (
+                <input
+                  type="tel"
+                  id={field.id}
+                  placeholder={field.placeholder}
+                  required={field.required}
+                  pattern={field.validation?.pattern}
+                  title={field.validation?.message}
+                  className={`input-field ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} border border-gray-300 rounded p-2 w-full`}
+                />
+              )}
 
               {/* Render checkbox */}
               {field.type === 'checkbox' && field.options ? (
-  <div className="checkbox-group mb-4">
-    {/* Render the label for the checkbox field only once */}    
-    {/* Map through the options and render individual checkboxes */}
-    {field.options.map((option) => (
-      <div key={option.value} className="flex items-center mb-2">
-        <input
-          type="checkbox"
-          id={option.value}
-          name={field.id}  // Ensure checkboxes share the same name for grouping
-          value={option.value}
-          className={`checkbox-input ${isDarkMode ? 'bg-gray-700' : 'bg-white'} border border-gray-300 p-2`}
-        />
-        <label htmlFor={option.value} className={`ml-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>
-          {option.label}
-        </label>
-      </div>
-    ))}
-  </div>
-) : null}
-
-
-
-
-
+                <div className="checkbox-group mb-4">
+                  {field.options.map((option) => (
+                    <div key={option.value} className="flex items-center mb-2">
+                      <input
+                        type="checkbox"
+                        id={option.value}
+                        name={field.id}
+                        value={option.value}
+                        className={`checkbox-input ${isDarkMode ? 'bg-gray-700' : 'bg-white'} border border-gray-300 p-2`}
+                      />
+                      <label htmlFor={option.value} className={`ml-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                        {option.label}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
           ))
         ) : (

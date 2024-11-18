@@ -10,6 +10,16 @@ const App: React.FC = () => {
   const handleJSONChange = (updatedJSON: any) => {
     setJsonData(updatedJSON);
   };
+  const [file, setFile] = useState<string | null>(null); // For storing image preview URL
+
+const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files[0]) {
+    const selectedFile = e.target.files[0];
+    const fileURL = URL.createObjectURL(selectedFile); // Create a URL for the selected image
+    setFile(fileURL); // Set the image preview URL
+  }
+};
+
 
   return (
     <div className="app-container">
